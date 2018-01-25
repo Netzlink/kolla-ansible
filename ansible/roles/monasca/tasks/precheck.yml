@@ -1,0 +1,71 @@
+---
+- name: Get container facts
+  kolla_container_facts:
+    name:
+      - monasca-api
+      - monasca-base
+      - monasca-log-api
+      - monasca-notification
+      - monasca-persister
+      - monasca-statsd
+  register: container_facts
+
+- name: Checking free ports for Monasca API
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_api_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-api'] is not defined
+
+- name: Checking free ports for Monasca
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-base'] is not defined
+
+- name: Checking free ports for Monasca Log API
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_log_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-log-api'] is not defined
+
+- name: Checking free ports for Monasca Notification
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_notification_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-notification'] is not defined
+
+- name: Checking free ports for Monasca Persister
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_persister_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-persister'] is not defined
+
+- name: Checking free ports for Monasca statsd
+  wait_for:
+    host: "{{ api_interface_address }}"
+    port: "{{ monasca_statsd_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - container_facts['monasca-statsd'] is not defined
