@@ -3,7 +3,6 @@
   kolla_container_facts:
     name:
       - monasca-api
-      - monasca-base
       - monasca-log-api
       - monasca-notification
       - monasca-persister
@@ -19,16 +18,6 @@
     state: stopped
   when:
     - container_facts['monasca-api'] is not defined
-
-- name: Checking free ports for Monasca
-  wait_for:
-    host: "{{ api_interface_address }}"
-    port: "{{ monasca_port }}"
-    connect_timeout: 1
-    timeout: 1
-    state: stopped
-  when:
-    - container_facts['monasca-base'] is not defined
 
 - name: Checking free ports for Monasca Log API
   wait_for:
