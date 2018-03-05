@@ -27,7 +27,7 @@ monasca_services:
     container_name: monasca_persister
     group: monasca
     enabled: true
-    image: "{{ monasca_perister_image_full }}"
+    image: "{{ monasca_persister_image_full }}"
     volumes:
       - "{{ node_config_directory }}/monasca/:{{ container_config_directory }}/:ro"
   monasca-statsd:
