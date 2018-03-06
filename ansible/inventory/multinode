@@ -645,6 +645,9 @@ vitrage
 [monasca-api:children]
 monasca
 
+[monasca-log-api:children]
+monasca
+
 [monasca-notification:children]
 monasca
 

@@ -231,6 +231,9 @@ monitoring
 [redis:children]
 control
 
+[monasca:children]
+monitoring
+
 # Additional control implemented here. These groups allow you to control which
 # services run on which hosts at a per-service level.
 #
@@ -618,3 +621,19 @@ vitrage
 
 [vitrage-ml:children]
 vitrage
+
+# Monasca
+[monasca-api:children]
+monasca
+
+[monasca-log-api:children]
+monasca
+
+[monasca-notification:children]
+monasca
+
+[monasca-persister:children]
+monasca
+
+[monasca-sidecar:children]
+monasca

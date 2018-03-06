@@ -26,7 +26,11 @@
     - inventory_hostname in groups[service.group]
     - service.enabled | bool
   notify:
-    - restart monasca
+    - restart monasca-api
+    - restart monasca_log_api
+    - restart monasca_notification
+    - restart monasca_persister
+    - restart monasca_statsd
 
 - name: Check monasca containers
   kolla_docker:
@@ -43,4 +47,8 @@
     - item.value.enabled | bool
   with_dict: "{{ monasca_services }}"
   notify:
-    - restart monasca
+    - restart monasca-api
+    - restart monasca_log_api
+    - restart monasca_notification
+    - restart monasca_persister
+    - restart monasca_statsd

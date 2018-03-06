@@ -1,7 +1,7 @@
 ---
-- name: restart monasca
+- name: restart monasca-api
   vars:
-    service_name: "monasca"
+    service_name: "monasca-api"
     service: "{{ monasca_services[service_name] }}"
     monasca_container: "{{ check_monasca_containers.results|selectattr('item.key', 'equalto', service_name)|first }}"
   kolla_docker:
@@ -18,17 +18,93 @@
     - monasca_config_json.changed | bool
       or monasca_container.changed | bool
   notify:
-    - wait for monasca
+    - wait for monasca-api
 
-- name: wait for monasca
+- name: restart monasca-log-api
+  vars:
+    service_name: "monasca-log-api"
+    service: "{{ monasca_services[service_name] }}"
+    monasca_container: "{{ check_monasca_containers.results|selectattr('item.key', 'equalto', service_name)|first }}"
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+  when:
+    - action != "config"
+    - inventory_hostname != master_host
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+    - monasca_config_json.changed | bool
+      or monasca_container.changed | bool
+
+- name: restart monasca-notification
+  vars:
+    service_name: "monasca-notification"
+    service: "{{ monasca_services[service_name] }}"
+    monasca_container: "{{ check_monasca_containers.results|selectattr('item.key', 'equalto', service_name)|first }}"
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+  when:
+    - action != "config"
+    - inventory_hostname != master_host
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+    - monasca_config_json.changed | bool
+      or monasca_container.changed | bool
+
+- name: restart monasca-persister
+  vars:
+    service_name: "monasca-persister"
+    service: "{{ monasca_services[service_name] }}"
+    monasca_container: "{{ check_monasca_containers.results|selectattr('item.key', 'equalto', service_name)|first }}"
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+  when:
+    - action != "config"
+    - inventory_hostname != master_host
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+    - monasca_config_json.changed | bool
+      or monasca_container.changed | bool
+
+- name: restart monasca-statsd
+  vars:
+    service_name: "monasca-statsd"
+    service: "{{ monasca_services[service_name] }}"
+    monasca_container: "{{ check_monasca_containers.results|selectattr('item.key', 'equalto', service_name)|first }}"
+  kolla_docker:
+    action: "recreate_or_restart_container"
+    common_options: "{{ docker_common_options }}"
+    name: "{{ service.container_name }}"
+    image: "{{ service.image }}"
+    volumes: "{{ service.volumes }}"
+  when:
+    - action != "config"
+    - inventory_hostname != master_host
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+    - monasca_config_json.changed | bool
+      or monasca_container.changed | bool
+
+- name: wait for monasca-api
   wait_for:
     host: "{{ api_interface_address }}"
-    port: "{{ monasca_port }}"
+    port: "{{ monasca_api_port }}"
     connect_timeout: 1
     timeout: 60
     search_regex: "Monasca"
-  register: check_monasca_port
-  until: check_monasca_port | success
+  register: check_monasca_api_port
+  until: check_monasca_api_port | success
   retries: 10
   delay: 6
   when:

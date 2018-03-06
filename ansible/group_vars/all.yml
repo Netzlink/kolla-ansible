@@ -234,6 +234,8 @@ memcached_port: "11211"
 
 mistral_api_port: "8989"
 
+monasca_api_port: "8070"
+
 mongodb_port: "27017"
 mongodb_web_port: "28017"
 
@@ -437,6 +439,7 @@ enable_manila_backend_hnas: "no"
 enable_manila_backend_cephfs_native: "no"
 enable_manila_backend_cephfs_nfs: "no"
 enable_mistral: "no"
+enable_monasca: "no"
 enable_mongodb: "no"
 enable_multipathd: "no"
 enable_murano: "no"
